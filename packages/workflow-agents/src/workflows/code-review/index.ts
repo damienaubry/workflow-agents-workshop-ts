@@ -40,7 +40,11 @@ interface CodeReviewInput {
 }
 
 export default task(
-  { name: "code-review", timeoutSeconds: 600 },
+  {
+    name: "code-review",
+    timeoutSeconds: 600,
+    retry: { maxRetries: 2, waitDurationMs: 2000, backoffScaling: 2 },
+  },
   async function codeReview(input: CodeReviewInput) {
     const runId = input._runId;
 
