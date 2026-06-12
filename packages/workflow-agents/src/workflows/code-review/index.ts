@@ -30,23 +30,28 @@ type Patches = Array<{ file: string; diff: string }>;
 type Findings = Array<{ agent: string; note: string }>;
 const ctx = (runId?: string) => ({ tracer: storeTracer(), ...(runId ? { runId } : {}) });
 
+const agentTaskOptions = {
+  timeoutSeconds: 120,
+  retry: { maxRetries: 2, waitDurationMs: 1000, backoffScaling: 2 },
+};
+
 const securityTask = task(
-  { name: "security", timeoutSeconds: 120, retry: { maxRetries: 2, waitDurationMs: 1000, backoffScaling: 2 } },
+  { name: "security", ...agentTaskOptions },
   async (input: { patches: Patches }, runId?: string) => securityReviewer.run(input, ctx(runId)),
 );
 
 const performanceTask = task(
-  { name: "performance", timeoutSeconds: 120, retry: { maxRetries: 2, waitDurationMs: 1000, backoffScaling: 2 } },
+  { name: "performance", ...agentTaskOptions },
   async (input: { patches: Patches }, runId?: string) => performanceReviewer.run(input, ctx(runId)),
 );
 
 const uxTask = task(
-  { name: "ux", timeoutSeconds: 120, retry: { maxRetries: 2, waitDurationMs: 1000, backoffScaling: 2 } },
+  { name: "ux", ...agentTaskOptions },
   async (input: { patches: Patches }, runId?: string) => uxReviewer.run(input, ctx(runId)),
 );
 
 const judgeTask = task(
-  { name: "judge", timeoutSeconds: 120, retry: { maxRetries: 2, waitDurationMs: 1000, backoffScaling: 2 } },
+  { name: "judge", ...agentTaskOptions },
   async (input: { findings: Findings }, runId?: string) => judge.run(input, ctx(runId)),
 );
 
