@@ -2,18 +2,18 @@
 # Builds from the repo root so the npm workspaces resolve.
 
 projects:
-  - name: agents-workshop-naive
+  - name: damienaubry-agents-workshop-naive
     environments:
       - name: production
         databases:
-          - name: naive-agent-db
+          - name: damienaubry-naive-agent-db
             plan: basic-256mb
             region: oregon
             postgresMajorVersion: "18"
 
         services:
           - type: web
-            name: naive-agent
+            name: damienaubry-naive-agent
             runtime: node
             region: oregon
             plan: starter
@@ -23,7 +23,7 @@ projects:
             envVars:
               - key: DATABASE_URL
                 fromDatabase:
-                  name: naive-agent-db
+                  name: damienaubry-naive-agent-db
                   property: connectionString
               - key: NODE_ENV
                 value: production
